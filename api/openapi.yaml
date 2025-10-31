@@ -1,0 +1,33 @@
+openapi: 3.0.0
+info:
+  title: CSH Home overview
+  version: alpha
+paths:
+  /api/v1/user:
+    get:
+      operationId: Users
+      summary: List users
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                title: Users
+                description: List of users
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+components:
+  schemas:
+    UserID:
+      type: string
+      description: ID of user
+      pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+      example: 1066d8cd-cf62-4024-ae3e-df8550cd6b71
+    User:
+      description: User object
+      type: object
+      properties:
+        user_id:
+          $ref: "#/components/schemas/UserID"
