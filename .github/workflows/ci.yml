@@ -1,0 +1,50 @@
+name: Lint
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+env:
+  NODE_VERSION: 25
+  GOVERSION: 1.25.3
+
+jobs:
+  lint-go:
+    name: Lint go
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version: ${{ env.GOVERSION }}
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v8
+        with:
+          version: v2.6
+      - name: Check generated files
+        run: go generate ./... && git diff --quiet || { git diff; echo "Malformed generated files. Run 'go generate ./...' and commit to fix"; exit 1; }
+  
+  lint-web:
+    name: Lint web
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Code Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        working-directory: ./web
+        run: npm ci
+
+      - name: Code Linting
+        working-directory: ./web
+        run: npm run lint
