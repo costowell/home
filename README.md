@@ -8,4 +8,4 @@ See [Documentation](./docs)
 
 ## Getting Started
 
-See [Getting Started](./docs/Getting Started.md)
+See [Getting Started](./docs/Getting%20Started.md)
